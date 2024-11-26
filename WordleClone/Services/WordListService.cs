@@ -31,8 +31,7 @@ public class WordListService
             HttpClient client = new();
             string wordList = await client.GetStringAsync(WordListUrl);
 
-            // Save the file locally
-            File.WriteAllText(localFilePath, wordList);
+            File.WriteAllText(localFilePath, wordList); //save the file locally
         }
         catch (Exception ex)
         {
