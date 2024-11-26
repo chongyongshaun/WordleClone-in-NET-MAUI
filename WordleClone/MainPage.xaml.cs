@@ -1,10 +1,16 @@
-﻿using WordleClone.Services;
+﻿using Microsoft.Maui.Controls.Compatibility;
+using WordleClone.Services;
 
 namespace WordleClone;
 
 public partial class MainPage : ContentPage
 {
     private readonly WordListService wordListService;
+    static int NUMBER_OF_GUESSES = 6;
+    int guessesRemaining = NUMBER_OF_GUESSES;
+    char[] currentGuess = [];
+    int nextLetter = 0;
+    string rightGuessString;
 
     public MainPage()
     {
@@ -18,12 +24,9 @@ public partial class MainPage : ContentPage
         {
             await wordListService.EnsureWordsFileExistsAsync();
             string[] words = wordListService.GetWords();
-                        
-            // debug: display the first 5 words in lbl            
-            foreach (var word in words)
-            {
-                lbl.Text += word + " ";
-            }
+            Random rnd = new();
+            rightGuessString = words[rnd.Next(words.Length)];
+
         }
         catch (Exception ex)
         {
