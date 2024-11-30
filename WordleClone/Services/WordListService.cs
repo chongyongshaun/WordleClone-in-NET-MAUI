@@ -1,9 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Net.Http;
-using System.Threading.Tasks;
-
-namespace WordleClone.Services;
+﻿namespace WordleClone.Services;
 
 public class WordListService
 {
