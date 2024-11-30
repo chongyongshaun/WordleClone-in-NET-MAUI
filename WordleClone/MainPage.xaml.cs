@@ -41,7 +41,6 @@ public partial class MainPage : ContentPage
             }
         }
         ThemeSwitch.IsToggled = true;
-        UserInput.Focus(); //focus the mouse on the userinput entry when init
     }
     private void OnKeyboardButtonClicked(object sender, EventArgs e)
     {
@@ -106,8 +105,9 @@ public partial class MainPage : ContentPage
         GameBoard.RowDefinitions.Clear();
         GameBoard.ColumnDefinitions.Clear();
 
-        GameBoard.RowSpacing = 10;
-        GameBoard.ColumnSpacing = 10;
+        double boxSize = 75;
+        GameBoard.RowSpacing = boxSize/75*10;
+        GameBoard.ColumnSpacing = boxSize / 75 * 10;
 
         for (int i = 0; i < NUMBER_OF_GUESSES; i++)
         {
@@ -119,7 +119,7 @@ public partial class MainPage : ContentPage
                     GameBoard.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
                 }
                 //create box for each letter
-                int boxSize = 75;
+                
                 var box = new Frame
                 {
                     BorderColor = WordleLightGray,                    
@@ -148,17 +148,23 @@ public partial class MainPage : ContentPage
     }
     private async void LoadWords()
     {
-        try
+        if (WORD_LETTER_COUNT == 5)
         {
-            await wordListService.EnsureWordsFileExistsAsync();
-            string[] words = wordListService.GetWords();
-            Random rnd = new();
-            rightGuessString = words[rnd.Next(words.Length)];
+            try
+            {
+                await wordListService.EnsureWordsFileExistsAsync();
+                string[] words = wordListService.GetWords();
+                Random rnd = new();
+                rightGuessString = words[rnd.Next(words.Length)];
 
-        }
-        catch (Exception ex)
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading words: {ex.Message}");
+            }
+        } else
         {
-            Console.WriteLine($"Error loading words: {ex.Message}");
+            rightGuessString = await DictionaryApiService.GetNLetterWordAsync(WORD_LETTER_COUNT);
         }
     }
 
@@ -310,5 +316,48 @@ public partial class MainPage : ContentPage
         if (e.Value) this.BackgroundColor = WordleDarkGray; //if switch is on, dark mode
         else this.BackgroundColor = Colors.Gray;
         UserInput.Focus();
+    }
+
+    private void LetterCountPicker_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if (LetterCountPicker.SelectedItem != null)
+        {
+            WORD_LETTER_COUNT = (int)LetterCountPicker.SelectedItem;
+            UserInput.MaxLength = WORD_LETTER_COUNT;
+            switch (WORD_LETTER_COUNT) {
+                case 4: case 5: 
+                    NUMBER_OF_GUESSES = 6;
+                    break;
+                case 6: case 7: case 8: 
+                    NUMBER_OF_GUESSES = 7;
+                    break;
+                default:
+                    NUMBER_OF_GUESSES = WORD_LETTER_COUNT + 1;
+                    break;
+            }
+        }
+    }
+
+    private void LetterCountBtn_Clicked(object sender, EventArgs e)
+    {
+        ResetGame();
+        InitBoard();
+        InitKeyBoard();
+    }
+
+    private void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
+    {
+        UserInput.Focus(); //refocus onto the entry whenever i click smwhere else
+        SettingsSidebar.IsVisible = false; //make the sidebar go away when u click smwhr else
+    }
+
+    private void ContentPage_Loaded(object sender, EventArgs e)
+    {
+        UserInput.Focus();//focus after the app fully loades
+    }
+
+    private void SettingsBtn_Clicked(object sender, EventArgs e)
+    {
+        SettingsSidebar.IsVisible = !SettingsSidebar.IsVisible;
     }
 }
