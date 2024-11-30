@@ -31,7 +31,16 @@ public partial class MainPage : ContentPage
         wordListService = new WordListService();
         LoadWords();        
         InitBoard();
-        InitKeyBoard();       
+        InitKeyBoard();   
+        //make the keyboard letters white because i dont wanna manually put textcolor=white in all of em
+        foreach (var child in KeyboardGrid.Children)
+        {
+            if (child is Button button)
+            {
+                button.TextColor = Colors.White;
+            }
+        }
+        ThemeSwitch.IsToggled = true;
         UserInput.Focus(); //focus the mouse on the userinput entry when init
     }
     private void OnKeyboardButtonClicked(object sender, EventArgs e)
@@ -92,12 +101,13 @@ public partial class MainPage : ContentPage
 
     private void InitBoard()
     {
-        ////4 debugging
-        //rightGuessLbl.Text = rightGuessString;
         //clear the board in case we call initboard again
         GameBoard.Children.Clear();
         GameBoard.RowDefinitions.Clear();
         GameBoard.ColumnDefinitions.Clear();
+
+        GameBoard.RowSpacing = 10;
+        GameBoard.ColumnSpacing = 10;
 
         for (int i = 0; i < NUMBER_OF_GUESSES; i++)
         {
@@ -293,5 +303,12 @@ public partial class MainPage : ContentPage
             var textFiltered = new string(e.NewTextValue.Where(char.IsLetter).ToArray());
             ((Entry)sender).Text = textFiltered;
         }
+    }
+
+    private void ThemeSwitch_Toggled(object sender, ToggledEventArgs e)
+    {
+        if (e.Value) this.BackgroundColor = WordleDarkGray; //if switch is on, dark mode
+        else this.BackgroundColor = Colors.Gray;
+        UserInput.Focus();
     }
 }

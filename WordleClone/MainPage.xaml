@@ -1,11 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="WordleClone.MainPage">
+             x:Class="WordleClone.MainPage"
+             Title="Wordle">
     <ScrollView>
-        <VerticalStackLayout>            
-            <Entry x:Name="UserInput" MaxLength="5"  TextChanged="UserInput_TextChanged" Completed="UserInput_Completed"
-                   Opacity="0" HeightRequest="0" WidthRequest="0" Text="{Binding UserInput, Mode=TwoWay}" />
+        <VerticalStackLayout>
+            <HorizontalStackLayout>
+                <Switch x:Name="ThemeSwitch" Toggled="ThemeSwitch_Toggled"/>
+                <Entry x:Name="UserInput" MaxLength="5"  TextChanged="UserInput_TextChanged" Completed="UserInput_Completed"
+                    Opacity="0" HeightRequest="0" WidthRequest="0" Text="{Binding UserInput}" />
+            </HorizontalStackLayout>
+            
             <Grid x:Name="GameBoard" HorizontalOptions="Center" VerticalOptions="Start" Margin="0,20,0,0"/>
 
             <Grid x:Name="KeyboardGrid" Padding="10" ColumnSpacing="5" RowSpacing="5" HorizontalOptions="Center">
@@ -28,37 +33,37 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <Button x:Name="ButtonQ" Text="Q" Grid.Row="0" Grid.Column="0" Clicked="OnKeyboardButtonClicked" />
-                <Button x:Name="ButtonW" Text="W" Grid.Row="0" Grid.Column="1" Clicked="OnKeyboardButtonClicked" />
-                <Button x:Name="ButtonE" Text="E" Grid.Row="0" Grid.Column="2" Clicked="OnKeyboardButtonClicked" />
-                <Button x:Name="ButtonR" Text="R" Grid.Row="0" Grid.Column="3" Clicked="OnKeyboardButtonClicked" />
-                <Button x:Name="ButtonT" Text="T" Grid.Row="0" Grid.Column="4" Clicked="OnKeyboardButtonClicked" />
-                <Button x:Name="ButtonY" Text="Y" Grid.Row="0" Grid.Column="5" Clicked="OnKeyboardButtonClicked" />
-                <Button x:Name="ButtonU" Text="U" Grid.Row="0" Grid.Column="6" Clicked="OnKeyboardButtonClicked" />
-                <Button x:Name="ButtonI" Text="I" Grid.Row="0" Grid.Column="7" Clicked="OnKeyboardButtonClicked" />
-                <Button x:Name="ButtonO" Text="O" Grid.Row="0" Grid.Column="8" Clicked="OnKeyboardButtonClicked" />
-                <Button x:Name="ButtonP" Text="P" Grid.Row="0" Grid.Column="9" Clicked="OnKeyboardButtonClicked" />
+                <Button x:Name="ButtonQ" Text="Q" Grid.Row="0" Grid.Column="0" Clicked="OnKeyboardButtonClicked"/>
+                <Button x:Name="ButtonW" Text="W" Grid.Row="0" Grid.Column="1" Clicked="OnKeyboardButtonClicked"/>
+                <Button x:Name="ButtonE" Text="E" Grid.Row="0" Grid.Column="2" Clicked="OnKeyboardButtonClicked"/>
+                <Button x:Name="ButtonR" Text="R" Grid.Row="0" Grid.Column="3" Clicked="OnKeyboardButtonClicked"/>
+                <Button x:Name="ButtonT" Text="T" Grid.Row="0" Grid.Column="4" Clicked="OnKeyboardButtonClicked"/>
+                <Button x:Name="ButtonY" Text="Y" Grid.Row="0" Grid.Column="5" Clicked="OnKeyboardButtonClicked"/>
+                <Button x:Name="ButtonU" Text="U" Grid.Row="0" Grid.Column="6" Clicked="OnKeyboardButtonClicked"/>
+                <Button x:Name="ButtonI" Text="I" Grid.Row="0" Grid.Column="7" Clicked="OnKeyboardButtonClicked"/>
+                <Button x:Name="ButtonO" Text="O" Grid.Row="0" Grid.Column="8" Clicked="OnKeyboardButtonClicked"/>
+                <Button x:Name="ButtonP" Text="P" Grid.Row="0" Grid.Column="9" Clicked="OnKeyboardButtonClicked"/>
 
-                <Button x:Name="ButtonA" Text="A" Grid.Row="1" Grid.Column="0" Clicked="OnKeyboardButtonClicked" />
-                <Button x:Name="ButtonS" Text="S" Grid.Row="1" Grid.Column="1" Clicked="OnKeyboardButtonClicked" />
-                <Button x:Name="ButtonD" Text="D" Grid.Row="1" Grid.Column="2" Clicked="OnKeyboardButtonClicked" />
-                <Button x:Name="ButtonF" Text="F" Grid.Row="1" Grid.Column="3" Clicked="OnKeyboardButtonClicked" />
-                <Button x:Name="ButtonG" Text="G" Grid.Row="1" Grid.Column="4" Clicked="OnKeyboardButtonClicked" />
-                <Button x:Name="ButtonH" Text="H" Grid.Row="1" Grid.Column="5" Clicked="OnKeyboardButtonClicked" />
-                <Button x:Name="ButtonJ" Text="J" Grid.Row="1" Grid.Column="6" Clicked="OnKeyboardButtonClicked" />
-                <Button x:Name="ButtonK" Text="K" Grid.Row="1" Grid.Column="7" Clicked="OnKeyboardButtonClicked" />
-                <Button x:Name="ButtonL" Text="L" Grid.Row="1" Grid.Column="8" Clicked="OnKeyboardButtonClicked" />
-                <Button x:Name="ButtonDel" Text="Del" Grid.Row="1" Grid.Column="10" Clicked="ButtonDel_Clicked" />
+                <Button x:Name="ButtonA" Text="A" Grid.Row="1" Grid.Column="0" Clicked="OnKeyboardButtonClicked"/>
+                <Button x:Name="ButtonS" Text="S" Grid.Row="1" Grid.Column="1" Clicked="OnKeyboardButtonClicked"/>
+                <Button x:Name="ButtonD" Text="D" Grid.Row="1" Grid.Column="2" Clicked="OnKeyboardButtonClicked"/>
+                <Button x:Name="ButtonF" Text="F" Grid.Row="1" Grid.Column="3" Clicked="OnKeyboardButtonClicked"/>
+                <Button x:Name="ButtonG" Text="G" Grid.Row="1" Grid.Column="4" Clicked="OnKeyboardButtonClicked"/>
+                <Button x:Name="ButtonH" Text="H" Grid.Row="1" Grid.Column="5" Clicked="OnKeyboardButtonClicked"/>
+                <Button x:Name="ButtonJ" Text="J" Grid.Row="1" Grid.Column="6" Clicked="OnKeyboardButtonClicked"/>
+                <Button x:Name="ButtonK" Text="K" Grid.Row="1" Grid.Column="7" Clicked="OnKeyboardButtonClicked"/>
+                <Button x:Name="ButtonL" Text="L" Grid.Row="1" Grid.Column="8" Clicked="OnKeyboardButtonClicked"/>
+                <Button x:Name="ButtonDel" Text="Del" Grid.Row="1" Grid.Column="10" Clicked="ButtonDel_Clicked"/>
 
-                <Button x:Name="ButtonZ" Text="Z" Grid.Row="2" Grid.Column="0" Clicked="OnKeyboardButtonClicked" />
-                <Button x:Name="ButtonX" Text="X" Grid.Row="2" Grid.Column="1" Clicked="OnKeyboardButtonClicked" />
-                <Button x:Name="ButtonC" Text="C" Grid.Row="2" Grid.Column="2" Clicked="OnKeyboardButtonClicked" />
-                <Button x:Name="ButtonV" Text="V" Grid.Row="2" Grid.Column="3" Clicked="OnKeyboardButtonClicked" />
-                <Button x:Name="ButtonB" Text="B" Grid.Row="2" Grid.Column="4" Clicked="OnKeyboardButtonClicked" />
-                <Button x:Name="ButtonN" Text="N" Grid.Row="2" Grid.Column="5" Clicked="OnKeyboardButtonClicked" />
-                <Button x:Name="ButtonM" Text="M" Grid.Row="2" Grid.Column="6" Clicked="OnKeyboardButtonClicked" />                
-                <Button x:Name="ButtonEnter" Text="Enter" Grid.Row="2" Grid.Column="10" Clicked="UserInput_Completed" />
-            </Grid>
+                <Button x:Name="ButtonZ" Text="Z" Grid.Row="2" Grid.Column="0" Clicked="OnKeyboardButtonClicked"/>
+                <Button x:Name="ButtonX" Text="X" Grid.Row="2" Grid.Column="1" Clicked="OnKeyboardButtonClicked"/>
+                <Button x:Name="ButtonC" Text="C" Grid.Row="2" Grid.Column="2" Clicked="OnKeyboardButtonClicked"/>
+                <Button x:Name="ButtonV" Text="V" Grid.Row="2" Grid.Column="3" Clicked="OnKeyboardButtonClicked"/>
+                <Button x:Name="ButtonB" Text="B" Grid.Row="2" Grid.Column="4" Clicked="OnKeyboardButtonClicked"/>
+                <Button x:Name="ButtonN" Text="N" Grid.Row="2" Grid.Column="5" Clicked="OnKeyboardButtonClicked"/>
+                <Button x:Name="ButtonM" Text="M" Grid.Row="2" Grid.Column="6" Clicked="OnKeyboardButtonClicked"/>                
+                <Button x:Name="ButtonEnter" Text="Enter" Grid.Row="2" Grid.Column="10" Clicked="UserInput_Completed"/>
+            </Grid>            
         </VerticalStackLayout>
     </ScrollView>
 
