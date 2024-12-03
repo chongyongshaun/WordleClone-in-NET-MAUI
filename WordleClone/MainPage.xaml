@@ -5,16 +5,18 @@
              Loaded="ContentPage_Loaded"
              Title="Wordle">
     <Grid>
-        <ScrollView>
-            <VerticalStackLayout>
+        <ScrollView >
+            <VerticalStackLayout x:Name="GameContentStack">
                 <VerticalStackLayout.GestureRecognizers>
                     <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
                 </VerticalStackLayout.GestureRecognizers>
-                <Entry x:Name="UserInput" MaxLength="5"  TextChanged="UserInput_TextChanged" Completed="UserInput_Completed" Opacity="0" HeightRequest="0" WidthRequest="0" Text="{Binding UserInput}" />          
+                <Entry x:Name="UserInput" MaxLength="5"  TextChanged="UserInput_TextChanged" Completed="UserInput_Completed" 
+                       Opacity="0" HeightRequest="30" WidthRequest="100" BackgroundColor="Gray" Text="{Binding UserInput}" 
+                       Margin="0, 25, 0, 0"/>
 
-                <Grid x:Name="GameBoard" HorizontalOptions="Center" VerticalOptions="Start" Margin="0,20,0,0"/>
+                <Grid x:Name="GameBoard" HorizontalOptions="Center" VerticalOptions="Start"/>
 
-                <Grid x:Name="KeyboardGrid" Padding="10" ColumnSpacing="5" RowSpacing="5" HorizontalOptions="Center">
+                <Grid x:Name="KeyboardGrid" ColumnSpacing="5" RowSpacing="5" HorizontalOptions="Center" VerticalOptions="Start">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
@@ -54,7 +56,7 @@
                     <Button x:Name="ButtonJ" Text="J" Grid.Row="1" Grid.Column="6" Clicked="OnKeyboardButtonClicked"/>
                     <Button x:Name="ButtonK" Text="K" Grid.Row="1" Grid.Column="7" Clicked="OnKeyboardButtonClicked"/>
                     <Button x:Name="ButtonL" Text="L" Grid.Row="1" Grid.Column="8" Clicked="OnKeyboardButtonClicked"/>
-                    <Button x:Name="ButtonDel" Text="Del" Grid.Row="1" Grid.Column="10" Clicked="ButtonDel_Clicked"/>
+                    <Button x:Name="ButtonDel" Text="Del" Grid.Row="1" Grid.Column="9" Clicked="ButtonDel_Clicked"/>
 
                     <Button x:Name="ButtonZ" Text="Z" Grid.Row="2" Grid.Column="0" Clicked="OnKeyboardButtonClicked"/>
                     <Button x:Name="ButtonX" Text="X" Grid.Row="2" Grid.Column="1" Clicked="OnKeyboardButtonClicked"/>
@@ -63,7 +65,7 @@
                     <Button x:Name="ButtonB" Text="B" Grid.Row="2" Grid.Column="4" Clicked="OnKeyboardButtonClicked"/>
                     <Button x:Name="ButtonN" Text="N" Grid.Row="2" Grid.Column="5" Clicked="OnKeyboardButtonClicked"/>
                     <Button x:Name="ButtonM" Text="M" Grid.Row="2" Grid.Column="6" Clicked="OnKeyboardButtonClicked"/>
-                    <Button x:Name="ButtonEnter" Text="Enter" Grid.Row="2" Grid.Column="10" Clicked="UserInput_Completed"/>
+                    <Button x:Name="ButtonEnter" Text="Enter" Grid.Row="2" Grid.Column="9" Clicked="UserInput_Completed"/>
                 </Grid>
             </VerticalStackLayout>
         </ScrollView>
@@ -71,8 +73,16 @@
         <VerticalStackLayout x:Name="SettingsSidebar" BackgroundColor="Black" WidthRequest="200" IsVisible="False"
                      HorizontalOptions="Start" VerticalOptions="FillAndExpand">
             <VerticalStackLayout Padding="10">
-                <Switch x:Name="ThemeSwitch" Toggled="ThemeSwitch_Toggled" />
-                <Picker x:Name="LetterCountPicker" Title="Number of Letters" SelectedIndexChanged="LetterCountPicker_SelectedIndexChanged">
+                <HorizontalStackLayout>
+                    <Label Text="Dark/Light Theme" TextColor="white"/>
+                    <Switch x:Name="ThemeSwitch" Toggled="ThemeSwitch_Toggled" />
+                </HorizontalStackLayout>
+                <HorizontalStackLayout>
+                    <Label Text="Show User Input" TextColor="white"/>
+                    <Switch x:Name="UserInputVisibilitySwitch" Toggled="UserInputVisibilitySwitch_Toggled"/>
+                </HorizontalStackLayout>
+                
+                <Picker x:Name="LetterCountPicker" Title="Number of Letters" SelectedIndexChanged="LetterCountPicker_SelectedIndexChanged" TitleColor="White">
                     <Picker.ItemsSource>
                         <x:Array Type="{x:Type x:Int32}">
                             <x:Int32>4</x:Int32>
@@ -83,7 +93,7 @@
                         </x:Array>
                     </Picker.ItemsSource>
                 </Picker>
-                <Button Text="Apply" x:Name="LetterCountBtn" Clicked="LetterCountBtn_Clicked"/>
+                <Button Text="Apply" x:Name="LetterCountBtn" Clicked="LetterCountBtn_Clicked" TextColor="White"/>
             </VerticalStackLayout>
         </VerticalStackLayout>
     </Grid>

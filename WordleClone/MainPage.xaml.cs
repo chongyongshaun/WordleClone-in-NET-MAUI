@@ -1,4 +1,6 @@
-﻿using WordleClone.Services;
+﻿using Microsoft.Maui.Controls.Shapes;
+using System.Reflection.Metadata.Ecma335;
+using WordleClone.Services;
 
 namespace WordleClone;
 
@@ -56,8 +58,14 @@ public partial class MainPage : ContentPage
     private void ButtonDel_Clicked(object sender, EventArgs e)
     {
         var button = sender as Button;
+        if (ViewModel.UserInput.Length < 1)
+        {
+            UserInput.Focus();
+            return;
+        }
         if (button != null)
         {
+            
             ViewModel.UserInput = ViewModel.UserInput.Remove(ViewModel.UserInput.Length - 1);   
             UpdateBoardFromCurrentGuess();
         }
@@ -88,14 +96,21 @@ public partial class MainPage : ContentPage
             if (button != null)
             {
                 button.BackgroundColor = WordleDarkGray;
+                button.TextColor = Colors.White;
             }
         }
         var enterButton = this.FindByName<Button>("ButtonEnter");
-        if (enterButton != null)
+        if (enterButton != null) {
             enterButton.BackgroundColor = WordleDarkGray;
-        var deleteButton = this.FindByName<Button>("ButtonDel");      
-        if (deleteButton != null)
+            enterButton.TextColor = Colors.White;
+        }          
+        
+        var deleteButton = this.FindByName<Button>("ButtonDel");
+        if (deleteButton != null) {
             deleteButton.BackgroundColor = WordleDarkGray;
+            deleteButton.TextColor = Colors.White;
+        }
+            
     }
 
     private void InitBoard()
@@ -119,10 +134,10 @@ public partial class MainPage : ContentPage
                     GameBoard.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
                 }
                 //create box for each letter
-                
+
                 var box = new Frame
                 {
-                    BorderColor = WordleLightGray,                    
+                    BorderColor = WordleLightGray,
                     HeightRequest = boxSize,
                     WidthRequest = boxSize,
                     BackgroundColor = WordleDarkGray,
@@ -133,12 +148,13 @@ public partial class MainPage : ContentPage
                         Text = string.Empty,
                         HorizontalOptions = LayoutOptions.Center,
                         VerticalOptions = LayoutOptions.Center,
-                        FontSize = boxSize/3,
+                        FontSize = boxSize / 3,
                         FontAttributes = FontAttributes.Bold,
                         HorizontalTextAlignment = TextAlignment.Center,
-                        VerticalTextAlignment = TextAlignment.Center
+                        VerticalTextAlignment = TextAlignment.Center,
+                        TextColor = Colors.White,
                     }
-                };         
+                };    
                 //add box to grid, nice and simple
                 GameBoard.SetRow(box, i);
                 GameBoard.SetColumn(box, j);
@@ -359,5 +375,49 @@ public partial class MainPage : ContentPage
     private void SettingsBtn_Clicked(object sender, EventArgs e)
     {
         SettingsSidebar.IsVisible = !SettingsSidebar.IsVisible;
+    }
+    protected override void OnSizeAllocated(double width, double height)
+    {
+        base.OnSizeAllocated(width, height);
+        //outputLbl.Text = "width: " + this.Width + "height: " + this.Height;
+        ResizeGameBoard(width);
+        ResizeKeyboard(width);
+    }
+
+    private void ResizeKeyboard(double width)
+    {
+        foreach (var item in KeyboardGrid.Children)
+        {
+            if (item.GetType() == typeof(Button))
+            {
+                Button btn = (Button)item;
+                btn.Scale = 1 - btn.Width / width;
+            }
+        }
+        KeyboardGrid.Scale = 1 - ((KeyboardGrid.Width / 4) / width);
+    }
+
+    private void ResizeGameBoard(double width)
+    {
+        foreach (var item in GameBoard.Children)
+        {
+            if (item.GetType() == typeof(Frame))
+            {
+                Frame frame = (Frame)item;
+                frame.Scale = 1 - frame.Width/ width;
+            }
+        }
+        GameBoard.Scale = 1 - ((GameBoard.Width/3) / width);
+    }
+
+    private void UserInputVisibilitySwitch_Toggled(object sender, ToggledEventArgs e)
+    {
+        if (UserInput.Opacity == 1)
+        {
+            UserInput.Opacity = 0;
+        } else
+        {
+            UserInput.Opacity = 1;
+        }
     }
 }
