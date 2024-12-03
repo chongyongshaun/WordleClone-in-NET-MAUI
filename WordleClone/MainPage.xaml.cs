@@ -1,6 +1,4 @@
-﻿using Microsoft.Maui.Controls.Shapes;
-using System.Reflection.Metadata.Ecma335;
-using WordleClone.Services;
+﻿using WordleClone.Services;
 
 namespace WordleClone;
 
@@ -20,13 +18,20 @@ public partial class MainPage : ContentPage
     Color WordleGray = Color.FromRgb(44, 48, 50);
     Color WordleDarkGray = Color.FromRgb(14, 15, 16);
     Color WordleLightGray = Color.FromRgb(121, 112, 99);
+    double gameBoardWidth = 0;
+    bool isDarkMode;
 
     public MainPage()
     {
         InitializeComponent();
         ViewModel = new MainPageViewModel();
         BindingContext = ViewModel;
-        ViewModel.CurrentGuess.CollectionChanged += (sender, args) =>
+        //load preferences
+        isDarkMode = Preferences.Get("IsDarkMode", true);
+        ThemeSwitch.IsToggled = isDarkMode; 
+        this.BackgroundColor = isDarkMode ? WordleDarkGray : Colors.Gray;
+
+        ViewModel.CurrentGuess.CollectionChanged += (sender, args) => //stackoverflow code
         {
             UpdateBoardFromCurrentGuess();
         };
@@ -154,7 +159,10 @@ public partial class MainPage : ContentPage
                         VerticalTextAlignment = TextAlignment.Center,
                         TextColor = Colors.White,
                     }
-                };    
+                };
+                var tapGestureRecognizer = new TapGestureRecognizer();
+                tapGestureRecognizer.Tapped += Frame_Tapped; // Attach the event handler
+                box.GestureRecognizers.Add(tapGestureRecognizer);
                 //add box to grid, nice and simple
                 GameBoard.SetRow(box, i);
                 GameBoard.SetColumn(box, j);
@@ -162,6 +170,12 @@ public partial class MainPage : ContentPage
             }
         }
     }
+
+    private void Frame_Tapped(object? sender, TappedEventArgs e)
+    {
+        UserInput.Focus();
+    }
+
     private async void LoadWords()
     {
         if (WORD_LETTER_COUNT == 5)
@@ -219,7 +233,6 @@ public partial class MainPage : ContentPage
 
         //give feedback for each letter
         //track count of correct letter in the correct word, basically hashmap
-        //i cant believe i'm actually using hashmaps for something wtf
         Dictionary<char, int> letterCounts = new();
         foreach (char letter in rightGuessString)
         {
@@ -329,8 +342,16 @@ public partial class MainPage : ContentPage
 
     private void ThemeSwitch_Toggled(object sender, ToggledEventArgs e)
     {
-        if (e.Value) this.BackgroundColor = WordleDarkGray; //if switch is on, dark mode
-        else this.BackgroundColor = Colors.Gray;
+        isDarkMode = e.Value; //update isDarkMode bool and save to pref
+        Preferences.Set("IsDarkMode", isDarkMode);
+        if (isDarkMode)
+        {
+            this.BackgroundColor = WordleDarkGray;
+        }
+        else
+        {
+            this.BackgroundColor = Colors.Gray;
+        }
         UserInput.Focus();
     }
 
@@ -358,7 +379,8 @@ public partial class MainPage : ContentPage
     {
         ResetGame();
         InitBoard();
-        InitKeyBoard();
+        ResizeGameBoard(gameBoardWidth, WORD_LETTER_COUNT);
+        InitKeyBoard();         
     }
 
     private void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
@@ -380,7 +402,8 @@ public partial class MainPage : ContentPage
     {
         base.OnSizeAllocated(width, height);
         //outputLbl.Text = "width: " + this.Width + "height: " + this.Height;
-        ResizeGameBoard(width);
+        gameBoardWidth = width;
+        ResizeGameBoard(width, WORD_LETTER_COUNT);
         ResizeKeyboard(width);
     }
 
@@ -397,7 +420,7 @@ public partial class MainPage : ContentPage
         KeyboardGrid.Scale = 1 - ((KeyboardGrid.Width / 4) / width);
     }
 
-    private void ResizeGameBoard(double width)
+    private void ResizeGameBoard(double width, int letterCount)
     {
         foreach (var item in GameBoard.Children)
         {
@@ -405,19 +428,9 @@ public partial class MainPage : ContentPage
             {
                 Frame frame = (Frame)item;
                 frame.Scale = 1 - frame.Width/ width;
+                if (letterCount >= 7) frame.Scale = 0.8;
             }
         }
         GameBoard.Scale = 1 - ((GameBoard.Width/3) / width);
-    }
-
-    private void UserInputVisibilitySwitch_Toggled(object sender, ToggledEventArgs e)
-    {
-        if (UserInput.Opacity == 1)
-        {
-            UserInput.Opacity = 0;
-        } else
-        {
-            UserInput.Opacity = 1;
-        }
     }
 }

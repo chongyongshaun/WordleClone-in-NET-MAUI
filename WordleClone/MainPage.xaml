@@ -11,12 +11,12 @@
                     <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
                 </VerticalStackLayout.GestureRecognizers>
                 <Entry x:Name="UserInput" MaxLength="5"  TextChanged="UserInput_TextChanged" Completed="UserInput_Completed" 
-                       Opacity="0" HeightRequest="30" WidthRequest="100" BackgroundColor="Gray" Text="{Binding UserInput}" 
-                       Margin="0, 25, 0, 0"/>
+                       Opacity="0" HeightRequest="1" WidthRequest="1" BackgroundColor="Gray" Text="{Binding UserInput}" 
+                       Margin="0, 0, 0, 0"/>
 
                 <Grid x:Name="GameBoard" HorizontalOptions="Center" VerticalOptions="Start"/>
 
-                <Grid x:Name="KeyboardGrid" ColumnSpacing="5" RowSpacing="5" HorizontalOptions="Center" VerticalOptions="Start">
+                <Grid x:Name="KeyboardGrid" ColumnSpacing="5" RowSpacing="5" HorizontalOptions="Center" VerticalOptions="Start" Margin="0,-30,0,0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
@@ -77,11 +77,7 @@
                     <Label Text="Dark/Light Theme" TextColor="white"/>
                     <Switch x:Name="ThemeSwitch" Toggled="ThemeSwitch_Toggled" />
                 </HorizontalStackLayout>
-                <HorizontalStackLayout>
-                    <Label Text="Show User Input" TextColor="white"/>
-                    <Switch x:Name="UserInputVisibilitySwitch" Toggled="UserInputVisibilitySwitch_Toggled"/>
-                </HorizontalStackLayout>
-                
+
                 <Picker x:Name="LetterCountPicker" Title="Number of Letters" SelectedIndexChanged="LetterCountPicker_SelectedIndexChanged" TitleColor="White">
                     <Picker.ItemsSource>
                         <x:Array Type="{x:Type x:Int32}">
