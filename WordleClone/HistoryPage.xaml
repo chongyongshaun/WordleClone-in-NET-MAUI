@@ -22,7 +22,7 @@
                         <HorizontalStackLayout>
                             <Label Text="{Binding WinState}" FontSize="18" FontAttributes="Bold" TextColor="Black" VerticalOptions="Center" Padding="0,0,25,0"/>
                             <VerticalStackLayout>
-                                <Label Text="{Binding Timestamp, StringFormat='{0:MM/dd/yyyy HH:mm:ss}'}" FontSize="14" TextColor="Black" />
+                                <Label Text="{Binding Timestamp}" FontSize="14" TextColor="Black" />
                                 <Label Text="{Binding CorrectWord}" FontSize="18" FontAttributes="Bold" TextColor="Black" />
                                 <HorizontalStackLayout>
                                     <Label Text="Number of Guesses: " FontSize="14" TextColor="Black" />
