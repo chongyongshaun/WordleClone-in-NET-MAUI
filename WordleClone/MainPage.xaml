@@ -6,6 +6,7 @@
              Title="Wordle">
     <Grid>
         <ScrollView >
+            
             <VerticalStackLayout x:Name="GameContentStack">
                 <VerticalStackLayout.GestureRecognizers>
                     <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />

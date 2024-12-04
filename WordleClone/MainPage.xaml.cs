@@ -8,7 +8,7 @@ public partial class MainPage : ContentPage
 
     private readonly WordListService wordListService;
     static int NUMBER_OF_GUESSES = 6;
-    static int WORD_LETTER_COUNT = 5;
+    static int WORD_LETTER_COUNT;
     int guessesRemaining = NUMBER_OF_GUESSES;
     string rightGuessString;
     private Dictionary<char, Color> keyboardStates = new Dictionary<char, Color>(); //to track the color of the keyboard letters, idk why microsoft calls their hashmap dictionaries
@@ -28,6 +28,7 @@ public partial class MainPage : ContentPage
         BindingContext = ViewModel;
         //load preferences
         isDarkMode = Preferences.Get("IsDarkMode", true);
+        WORD_LETTER_COUNT = Preferences.Get("letterCount", 5);
         ThemeSwitch.IsToggled = isDarkMode; 
         this.BackgroundColor = isDarkMode ? WordleDarkGray : Colors.Gray;
 
@@ -47,7 +48,6 @@ public partial class MainPage : ContentPage
                 button.TextColor = Colors.White;
             }
         }
-        ThemeSwitch.IsToggled = true;
     }
     private void OnKeyboardButtonClicked(object sender, EventArgs e)
     {
@@ -325,7 +325,8 @@ public partial class MainPage : ContentPage
     }
 
     private async void UserInput_Completed(object sender, EventArgs e)
-    {        
+    {
+        UserInput.IsEnabled = false;
         if (ViewModel.CurrentGuess.Count != WORD_LETTER_COUNT)
         {
             await DisplayAlert("Invalid Input", "Please enter a 5-letter word.", "OK");
@@ -339,6 +340,8 @@ public partial class MainPage : ContentPage
             ViewModel.UserInput = ViewModel.UserInput.ToLower();
             CheckGuessAsync();
         }
+        await Task.Delay(2000); //keep the input disable for 2 seconds to avoid user spam clicking enter key bug
+        UserInput.IsEnabled = true;
         UserInput.Focus();
     }
     private void UserInput_TextChanged(object sender, TextChangedEventArgs e)
@@ -391,7 +394,8 @@ public partial class MainPage : ContentPage
         ResetGame();
         InitBoard();
         ResizeGameBoard(gameBoardWidth, WORD_LETTER_COUNT);
-        InitKeyBoard();         
+        InitKeyBoard();
+        Preferences.Set("letterCount", WORD_LETTER_COUNT);
     }
 
     private void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
