@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WordleClone.HistoryPage"
+             Title="HistoryPage">
+    <VerticalStackLayout>
+        <Label Text="Game History" FontSize="24" HorizontalOptions="Center" />
+        <CollectionView x:Name="HistoryCollectionView" 
+                        ItemsSource="{Binding PlayHistoryList}" 
+                        Margin="0,20,0,0">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Margin="5" Padding="10" BorderColor="Gray">
+                        <Frame.Triggers>
+                            <DataTrigger TargetType="Frame" Binding="{Binding WinState}" Value="Win">
+                                <Setter Property="BackgroundColor" Value="Green" />
+                            </DataTrigger>
+                            <DataTrigger TargetType="Frame" Binding="{Binding WinState}" Value="Loss">
+                                <Setter Property="BackgroundColor" Value="Red" />
+                            </DataTrigger>
+                        </Frame.Triggers>
+                        <HorizontalStackLayout>
+                            <Label Text="{Binding WinState}" FontSize="18" FontAttributes="Bold" TextColor="Black" VerticalOptions="Center" Padding="0,0,25,0"/>
+                            <VerticalStackLayout>
+                                <Label Text="{Binding Timestamp, StringFormat='{0:MM/dd/yyyy HH:mm:ss}'}" FontSize="14" TextColor="Black" />
+                                <Label Text="{Binding CorrectWord}" FontSize="18" FontAttributes="Bold" TextColor="Black" />
+                                <HorizontalStackLayout>
+                                    <Label Text="Number of Guesses: " FontSize="14" TextColor="Black" />
+                                    <Label Text="{Binding GuessesTaken}" FontSize="14" TextColor="Black" />
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
+                        </HorizontalStackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </VerticalStackLayout>
+</ContentPage>

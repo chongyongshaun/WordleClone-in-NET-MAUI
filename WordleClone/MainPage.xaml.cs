@@ -1,10 +1,13 @@
-﻿using WordleClone.Services;
+﻿using System.Collections.ObjectModel;
+using System.Text.Json;
+using WordleClone.Services;
 
 namespace WordleClone;
 
 public partial class MainPage : ContentPage
 {
-    public MainPageViewModel ViewModel { get; set; }    
+    public MainPageViewModel ViewModel { get; set; }
+    public ObservableCollection<PlayHistory> PlayHistoryList { get; set; } = [];
 
     private readonly WordListService wordListService;
     static int NUMBER_OF_GUESSES = 6;
@@ -39,7 +42,8 @@ public partial class MainPage : ContentPage
         wordListService = new WordListService();
         LoadWords();        
         InitBoard();
-        InitKeyBoard();   
+        InitKeyBoard();
+        LoadHistoryList();
         //make the keyboard letters white because i dont wanna manually put textcolor=white in all of em
         foreach (var child in KeyboardGrid.Children)
         {
@@ -49,6 +53,23 @@ public partial class MainPage : ContentPage
             }
         }
     }
+
+    private void LoadHistoryList()
+    {
+        string historyJson = Preferences.Get("PlayHistoryList", null);
+        if (!string.IsNullOrEmpty(historyJson))
+        {
+            var loadedList = JsonSerializer.Deserialize<List<PlayHistory>>(historyJson);
+            if (loadedList != null)
+            {
+                foreach (var item in loadedList)
+                {
+                    PlayHistoryList.Add(item);
+                }
+            }
+        }
+    }
+
     private void OnKeyboardButtonClicked(object sender, EventArgs e)
     {
         var button = sender as Button;
@@ -215,9 +236,9 @@ public partial class MainPage : ContentPage
     private async Task FrameAnimationAsync(Frame frame, Color newColor)
     {
         // scale it down, change color and make it big again, for a pop effect
-        await frame.ScaleTo(0, 150, Easing.CubicIn); //easing graphs, same stuff as javascript
+        await frame.ScaleTo(0, 75, Easing.CubicIn); //easing graphs, same stuff as javascript
         frame.BackgroundColor = newColor;
-        await frame.ScaleTo(1, 150, Easing.CubicOut);
+        await frame.ScaleTo(1, 75, Easing.CubicOut);
     }
     private async void CheckGuessAsync()
     {
@@ -232,7 +253,14 @@ public partial class MainPage : ContentPage
                 var box = (Frame)GameBoard.Children[index];
                 await FrameAnimationAsync(box, WordleGreen);
             }
-
+            PlayHistoryList.Add(new PlayHistory
+            {
+                Timestamp = DateTime.Now,
+                CorrectWord = rightGuessString,
+                GuessesTaken = NUMBER_OF_GUESSES - guessesRemaining,
+                WinState = "Win"
+            });
+            SaveHistoryList();
             await DisplayAlert("Congratulations!", "You guessed the word!", "OK");
             ResetGame();
             return;
@@ -291,8 +319,17 @@ public partial class MainPage : ContentPage
         UpdateKeyboardColors();
         guessesRemaining--;
 
-        if (guessesRemaining == 0)
+        if (guessesRemaining == 0) //lose logic
         {
+            PlayHistoryList.Add(new PlayHistory
+            {
+                Timestamp = DateTime.Now,
+                CorrectWord = rightGuessString,
+                GuessesTaken = NUMBER_OF_GUESSES,
+                WinState = "Loss"
+            });
+            SaveHistoryList();
+            UserInput.Unfocus();
             await DisplayAlert("Game Over", $"The correct word was: {rightGuessString}", "OK");
             ResetGame();
             return;
@@ -301,6 +338,12 @@ public partial class MainPage : ContentPage
         //clear everything for the next game
         ViewModel.CurrentGuess.Clear();
         UserInput.Text = string.Empty; 
+    }
+
+    private void SaveHistoryList()
+    {
+        string historyJson = JsonSerializer.Serialize(PlayHistoryList);
+        Preferences.Set("PlayHistoryList", historyJson);
     }
 
     private void UpdateKeyboardColors()
@@ -340,7 +383,7 @@ public partial class MainPage : ContentPage
             ViewModel.UserInput = ViewModel.UserInput.ToLower();
             CheckGuessAsync();
         }
-        await Task.Delay(2000); //keep the input disable for 2 seconds to avoid user spam clicking enter key bug
+        await Task.Delay(1000); //keep the input disable for 2 seconds to avoid user spam clicking enter key bug
         UserInput.IsEnabled = true;
         UserInput.Focus();
     }
@@ -447,5 +490,10 @@ public partial class MainPage : ContentPage
             }
         }
         GameBoard.Scale = 1 - ((GameBoard.Width/3) / width);
+    }
+
+    private void HistoryPageBtn_Clicked(object sender, EventArgs e)
+    {
+        Navigation.PushAsync(new HistoryPage(PlayHistoryList));
     }
 }

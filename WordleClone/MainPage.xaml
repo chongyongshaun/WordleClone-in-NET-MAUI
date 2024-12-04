@@ -70,7 +70,11 @@
                 </Grid>
             </VerticalStackLayout>
         </ScrollView>
-        <Button x:Name="SettingsBtn" Text="⚙️" FontSize="24" BackgroundColor="Transparent" HorizontalOptions="Start" VerticalOptions="Start" Margin="10" Clicked="SettingsBtn_Clicked"/>
+        <HorizontalStackLayout HorizontalOptions="Start" VerticalOptions="Start">
+            <Button x:Name="SettingsBtn" Text="⚙️" FontSize="24" BackgroundColor="Transparent"  Margin="10" Clicked="SettingsBtn_Clicked"/>
+            <Button x:Name="HistoryPageBtn" Text="🏆" FontSize="24" BackgroundColor="Transparent"  Margin="0" Clicked="HistoryPageBtn_Clicked"/>
+        </HorizontalStackLayout>
+        
         <VerticalStackLayout x:Name="SettingsSidebar" BackgroundColor="Black" WidthRequest="200" IsVisible="False"
                      HorizontalOptions="Start" VerticalOptions="FillAndExpand">
             <VerticalStackLayout Padding="10">
