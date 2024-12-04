@@ -212,6 +212,13 @@ public partial class MainPage : ContentPage
         UpdateKeyboardColors();
         UserInput.Text = string.Empty;
     }
+    private async Task FrameAnimationAsync(Frame frame, Color newColor)
+    {
+        // scale it down, change color and make it big again, for a pop effect
+        await frame.ScaleTo(0, 150, Easing.CubicIn); //easing graphs, same stuff as javascript
+        frame.BackgroundColor = newColor;
+        await frame.ScaleTo(1, 150, Easing.CubicOut);
+    }
     private async void CheckGuessAsync()
     {
         string guess = new(ViewModel.CurrentGuess.ToArray());
@@ -223,7 +230,7 @@ public partial class MainPage : ContentPage
             {
                 int index = (NUMBER_OF_GUESSES - guessesRemaining) * WORD_LETTER_COUNT + i; //check row index for the grid.children
                 var box = (Frame)GameBoard.Children[index];
-                box.BackgroundColor = WordleGreen;
+                await FrameAnimationAsync(box, WordleGreen);
             }
 
             await DisplayAlert("Congratulations!", "You guessed the word!", "OK");
@@ -251,7 +258,7 @@ public partial class MainPage : ContentPage
 
             if (letter == rightGuessString[i])
             {
-                box.BackgroundColor = WordleGreen;
+                await FrameAnimationAsync(box, WordleGreen);
                 keyboardStates[letter] = WordleGreen;
                 letterCounts[letter]--;
             }
@@ -268,13 +275,13 @@ public partial class MainPage : ContentPage
 
             if (rightGuessString.Contains(letter) && letterCounts[letter] > 0)
             {
-                box.BackgroundColor = WordleYellow;//right ltr wrong post
+                await FrameAnimationAsync(box, WordleYellow);//right ltr wrong post
                 keyboardStates[letter] = WordleYellow;
                 letterCounts[letter]--;
             }
             else
             {
-                box.BackgroundColor = WordleGray;//wrong ltr
+                await FrameAnimationAsync(box, WordleGray);//wrong ltr
                 //check if that key already has a color yellow or green
                 if (keyboardStates[char.ToUpper(letter)] == WordleYellow || keyboardStates[char.ToUpper(letter)] == WordleGreen) continue;
                 keyboardStates[letter] = WordleGray;
@@ -291,9 +298,9 @@ public partial class MainPage : ContentPage
             return;
         }
 
-        // Reset for the next guess
-        ViewModel.CurrentGuess.Clear(); // Clear the current guess
-        UserInput.Text = string.Empty; // Clear the Entry
+        //clear everything for the next game
+        ViewModel.CurrentGuess.Clear();
+        UserInput.Text = string.Empty; 
     }
 
     private void UpdateKeyboardColors()
@@ -303,6 +310,10 @@ public partial class MainPage : ContentPage
             Button button = FindKeyboardButton(key.Key);
             if (button != null)
             {
+                if (button.BackgroundColor == WordleDarkGray) button.BackgroundColor = key.Value;
+                if (button.BackgroundColor == WordleYellow && key.Value == WordleGreen) button.BackgroundColor = key.Value;
+                if (button.BackgroundColor == WordleGray && key.Value == WordleGreen) button.BackgroundColor = key.Value;
+                if (button.BackgroundColor == WordleGray && key.Value == WordleYellow) button.BackgroundColor = key.Value;
                 button.BackgroundColor = key.Value;
             }
         }

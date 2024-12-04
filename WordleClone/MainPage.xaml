@@ -16,7 +16,7 @@
 
                 <Grid x:Name="GameBoard" HorizontalOptions="Center" VerticalOptions="Start"/>
 
-                <Grid x:Name="KeyboardGrid" ColumnSpacing="5" RowSpacing="5" HorizontalOptions="Center" VerticalOptions="Start" Margin="0,-30,0,0">
+                <Grid x:Name="KeyboardGrid" ColumnSpacing="5" RowSpacing="5" HorizontalOptions="Center" VerticalOptions="Start" Margin="0,-25,0,0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
